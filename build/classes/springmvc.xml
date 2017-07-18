@@ -1,0 +1,50 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans-4.3.xsd 
+		http://www.springframework.org/schema/mvc 
+		http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd 
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context-4.3.xsd 
+		http://www.springframework.org/schema/aop 
+		http://www.springframework.org/schema/aop/spring-aop-4.3.xsd 
+		http://www.springframework.org/schema/tx 
+		http://www.springframework.org/schema/tx/spring-tx-4.3.xsd ">
+<!-- handler -->
+		<bean id="demo1" name="/demo1.action" class="demo.demo1" />
+		<bean id="demo2" name="/demo2.action" class="demo.demo2" />
+		<!-- <bean class="demo.demo3" /> -->
+		<context:component-scan base-package="demo" />
+<!-- 处理器映射器 （所有映射器都实现HandlerMapping接口）,多个处理器映射器可以共存-->
+		<!-- 1. name-->
+		<bean class="org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping" />
+		<!-- 2. id-->
+		<bean class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
+			<property name="mappings">
+				<props>
+					<prop key="/demo11.action">demo1</prop>
+					<prop key="/demo22.action">demo2</prop>
+				</props>
+			</property>
+		</bean>
+		<!-- 3.注解版处理器映射器,使用这个要求必须在handler里面用@controller来表示此类是一个控制器，并且使用@requestMapping指定handler方法对应的url -->
+		<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping" /> 
+		
+		
+	
+<!-- 处理器适配器 （所有适配器都实现HandlerAdapter接口）-->
+		<!-- 1.通过support方法知道handler必须实现controller接口 ，-->
+		<bean class="org.springframework.web.servlet.mvc.SimpleControllerHandlerAdapter" />
+		
+		<!-- 2. 要求handler必须实现HttpRequestHandler接口-->
+		<bean class="org.springframework.web.servlet.mvc.HttpRequestHandlerAdapter" />
+		
+		<!-- 3.注解适配器，不要求handler实现任何接口，但是必须要与注解映射器联合使用，解析handler方法中的参数 -->
+		<bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter" />
+		
+<!-- 视图解析器 -->
+		<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" />
+
+</beans>
